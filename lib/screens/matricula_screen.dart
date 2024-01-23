@@ -36,36 +36,12 @@ class _MatriculasHomeState extends State<MatriculasHome> {
         return AlertDialog(
           title: Text("Ingrese el Instituto"),
           backgroundColor: Colors.white,
-          content: TextField(
-            controller: _instituteController,
-            decoration: InputDecoration(
-              hintText: "Nombre del Instituto",
-              hintStyle: TextStyle(fontSize: 12),
-              prefixIcon: Icon(
-                Icons.add,
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12.0),
-                borderSide: BorderSide(
-                  color: Colors.deepPurpleAccent,
-                  width: 3.0,
-                ),
-              ),
-              enabledBorder: UnderlineInputBorder(
-                // borderRadius: BorderRadius.circular(12.0),
-                borderSide: BorderSide(
-                  color: Colors.redAccent,
-                  width: 3.0,
-                ),
-              ),
-            ),
-          ),
+          content: miTextField(
+              _instituteController, "Nombre del Instituto", Icons.add),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.pop(context);
-                // Navigator.pop(context);
-                // Navigator.pop(context);
               },
               child: Text(
                 "Cancelar",
