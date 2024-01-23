@@ -24,12 +24,162 @@ class _MatriculasHomeState extends State<MatriculasHome> {
   List<Matricula> matriculasList = [];
 
   List<Institucion> institucioneslist = [];
-  showMiDialogo() {
+
+  TextEditingController _instituteController = TextEditingController();
+  TextEditingController _nombreController = TextEditingController();
+  TextEditingController _direccionController = TextEditingController();
+  TextEditingController _celularController = TextEditingController();
+  showDialogInstitute() {
     showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return Text("hoal");
-        });
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Ingrese el Instituto"),
+          backgroundColor: Colors.white,
+          content: TextField(
+            controller: _instituteController,
+            decoration: InputDecoration(
+              hintText: "Nombre del Instituto",
+              hintStyle: TextStyle(fontSize: 12),
+              prefixIcon: Icon(
+                Icons.add,
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12.0),
+                borderSide: BorderSide(
+                  color: Colors.deepPurpleAccent,
+                  width: 3.0,
+                ),
+              ),
+              enabledBorder: UnderlineInputBorder(
+                // borderRadius: BorderRadius.circular(12.0),
+                borderSide: BorderSide(
+                  color: Colors.redAccent,
+                  width: 3.0,
+                ),
+              ),
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+                // Navigator.pop(context);
+                // Navigator.pop(context);
+              },
+              child: Text(
+                "Cancelar",
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                print("presiono aceptar");
+                institucioneslist.add(
+                  Institucion(
+                    nombre: _instituteController.text,
+                    direccion: "AV LIMA 123123",
+                    ruc: "12345678",
+                    telefono: "98765431",
+                    matriculas: [],
+                  ),
+                );
+                _instituteController.text = "";
+                setState(() {});
+                Navigator.pop(context);
+              },
+              child: Text(
+                "Aceptar",
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  showDialogMatricula(institucionElement) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Ingrese Datos de la Persona"),
+          backgroundColor: Colors.white,
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              miTextField(_nombreController, "Nombre", Icons.person),
+              miTextField(_direccionController, "Direccion", Icons.house),
+              miTextField(_celularController, "Celular", Icons.phone,
+                  inputType: TextInputType.number),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+                // Navigator.pop(context);
+                // Navigator.pop(context);
+              },
+              child: Text(
+                "Cancelar",
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                print("presiono aceptar");
+                institucionElement.matriculas.add(
+                  Matricula(
+                    fecha: "14/01/2024",
+                    hora: "11:05",
+                    alumno: Person(
+                        name: _nombreController.text,
+                        address: _direccionController.text,
+                        phone: _celularController.text),
+                    carrera: carrerasList[1],
+                  ),
+                );
+                _nombreController.text = "";
+                _direccionController.text = "";
+                _celularController.text = "";
+                setState(() {});
+                Navigator.pop(context);
+              },
+              child: Text(
+                "Aceptar",
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  TextField miTextField(controller, hint, icon, {TextInputType? inputType}) {
+    return TextField(
+      controller: controller,
+      keyboardType: inputType ?? TextInputType.text,
+      decoration: InputDecoration(
+        hintText: hint,
+        hintStyle: TextStyle(fontSize: 12),
+        prefixIcon: Icon(
+          icon,
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12.0),
+          borderSide: BorderSide(
+            color: Colors.deepPurpleAccent,
+            width: 3.0,
+          ),
+        ),
+        enabledBorder: UnderlineInputBorder(
+          // borderRadius: BorderRadius.circular(12.0),
+          borderSide: BorderSide(
+            color: Colors.redAccent,
+            width: 3.0,
+          ),
+        ),
+      ),
+    );
   }
 
   @override
@@ -42,16 +192,7 @@ class _MatriculasHomeState extends State<MatriculasHome> {
           IconButton(
             onPressed: () {
               //AGREGAR INSTITUCIONES
-              institucioneslist.add(
-                Institucion(
-                  nombre: "UTP",
-                  direccion: "AV LIMA 123123",
-                  ruc: "12345678",
-                  telefono: "98765431",
-                  matriculas: [],
-                ),
-              );
-              setState(() {});
+              showDialogInstitute();
             },
             icon: Icon(Icons.add),
           ),
@@ -86,26 +227,7 @@ class _MatriculasHomeState extends State<MatriculasHome> {
           //   },
           //   child: Text("Agregar"),
           // ),
-          GestureDetector(
-            onTap: () {
-              print("yes");
-              showMiDialogo();
-            },
-            child: Container(
-              width: 200,
-              height: 200,
-              decoration: BoxDecoration(color: Colors.yellowAccent, boxShadow: [
-                BoxShadow(
-                    color: Colors.deepPurpleAccent,
-                    blurRadius: 10,
-                    offset: Offset(4, 4)),
-                BoxShadow(
-                    color: Colors.deepPurpleAccent,
-                    blurRadius: 10,
-                    offset: Offset(-4, -4)),
-              ]),
-            ),
-          ),
+
           ...institucioneslist.map(
             (institucionElement) => Column(
               children: [
@@ -122,7 +244,8 @@ class _MatriculasHomeState extends State<MatriculasHome> {
                     IconButton(
                       onPressed: () {
                         print("agregando-............");
-                        institucionElement.matriculas.add(
+                        showDialogMatricula(institucionElement);
+                        /* institucionElement.matriculas.add(
                           Matricula(
                             fecha: "14/01/2024",
                             hora: "11:05",
@@ -133,7 +256,7 @@ class _MatriculasHomeState extends State<MatriculasHome> {
                             carrera: carrerasList[1],
                           ),
                         );
-                        setState(() {});
+                        setState(() {}); */
                       },
                       icon: Icon(Icons.add),
                     ),
@@ -167,7 +290,7 @@ class _MatriculasHomeState extends State<MatriculasHome> {
                       ),
                     ),
                     title: Text("${e.alumno.name} - ${e.carrera.nombre}"),
-                    subtitle: Text(e.alumno.address),
+                    subtitle: Text("${e.alumno.address} - ${e.alumno.phone}"),
                     trailing: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
